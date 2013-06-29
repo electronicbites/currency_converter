@@ -21,8 +21,6 @@ class Clicks
   end
 end
 
-#select * from clicks where currency not is null and click_payout_currency not is null and click_payout is null
-
 
 class CurrencyConverter
   def convert currency, money
@@ -51,8 +49,6 @@ DataMapper.setup(:default, 'mysql://prosper202:L7mcsTe@localhost/prosper202')
 
 Clicks.to_convert.each do |click|
   converted_payout = CurrencyConverter.new.convert(click.currency, click.click_payout_currency)
-  #click.update(click_payout: converted_payout)
-  #click.update!(currency: 'CHF')
   click.click_payout = converted_payout.to_f
   click.save
   puts "converted id #{click.click_id}: #{converted_payout}, #{click.click_payout}, currency: #{click.currency}"
