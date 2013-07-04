@@ -12,9 +12,9 @@ class Clicks
 
   property :click_id, Serial
   property :user_id, Integer
-  property :click_payout, Integer
+  property :click_payout, Float
   property :currency, String
-  property :click_payout_currency, Integer
+  property :click_payout_currency, Float
 
   def self.to_convert
     all(:click_payout => 0, :currency.not => nil, :click_payout_currency.not => nil )
