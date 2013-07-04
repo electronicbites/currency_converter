@@ -22,6 +22,16 @@ class Clicks
 end
 
 
+class ClicksSpy
+  include DataMapper::Resource
+  storage_names[:default] = "202_clicks_spy"
+
+  property :click_id, Serial
+  property :click_payout, Float
+end
+
+
+
 class CurrencyConverter
   def convert currency, money
     if currency == 'EUR'
@@ -51,5 +61,10 @@ Clicks.to_convert.each do |click|
   converted_payout = CurrencyConverter.new.convert(click.currency, click.click_payout_currency)
   click.click_payout = converted_payout.to_f
   click.save
+  click_spy = ClicksSpy.first(click_id: click.click_id)
+  if click_spy && click_spy.click_payout == click.click_payout_currency
+    click_spy.click_payout = converted_payout.to_f
+    click_spy.save
+  end
   puts "converted id #{click.click_id}: #{converted_payout}, #{click.click_payout}, currency: #{click.currency}"
 end
